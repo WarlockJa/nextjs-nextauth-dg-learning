@@ -1,0 +1,22 @@
+- install next-auth (https://next-auth.js.org/configuration/options)
+npm i next-auth
+- create src/app/api/auth/[...nextauth]/route.ts
+- creating options.ts (https://next-auth.js.org/configuration/options) Docs contain infromation on options, including methods of authentication. Default is JWE(JWT Encrypted). Default pages such as SignIn, SignOut, etc., can be customized otherwise are provided by NextAuth
+- generating secret and save in .env.local as NEXTAUTH_SECRET
+openssl rand -base64 32
+- setup credentials providers (https://next-auth.js.org/configuration/providers/credentials)
+- setting up GitHub: github -> settings -> developer settings -> OAuth -> created new app
+- setting up Credentials (https://next-auth.js.org/providers/credentials). In this example the credentials are hardcoded. Need a source of user data(DB)
+- setting up Facebook (TODO make it happen somehow)
+    Middleware
+- creating src/middleware.ts (invokes next-auth on every route, according to matcher rules i.e. protected routes)
+    Frontend
+- adding UserCard component src/app/components/UserCard.tsx
+- editing src/app/page.tsx to display UserCard if authenticated
+- creating auth context src/app/context/AuthProvider.tsx
+- wrapping root layout in AuthProvider src/app/layout.tsx
+- creating server page src/app/server/page.tsx (it uses nextauth to authenticate on the server and then redirects to the initial route)
+- creating protected by middleware page src/app/extra/page.tsx (to demonstrate that despite not using nextuath it still does require authentication through middleware)
+- adding github Images support in next.config.js (without it cannot access avatars.githubusercontent.com)
+- adding client page src/app/client/page.tsx (it is best to use auth data on server pages and import client pages. This is just an example of a client page with auth)
+- added signOut to the Navbar to avoid confirm popup and reroute. src/app/components/NavbarSignOutButton.tsx (it's a client component use in server Navbar)
