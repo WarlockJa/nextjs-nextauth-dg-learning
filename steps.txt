@@ -20,3 +20,9 @@ openssl rand -base64 32
 - adding github Images support in next.config.js (without it cannot access avatars.githubusercontent.com)
 - adding client page src/app/client/page.tsx (it is best to use auth data on server pages and import client pages. This is just an example of a client page with auth)
 - added signOut to the Navbar to avoid confirm popup and reroute. src/app/components/NavbarSignOutButton.tsx (it's a client component use in server Navbar)
+    Facebook
+- setting up keys for the FB https://developers.facebook.com/apps. Create test app. Get keys.
+- configure Products -> Facebook Login -> Configure -> Settings -> Deauthorize URL (https://localhost:3000/api/auth/callback/facebook)
+- configure NextImage for FB CDN in next.config.js
+
+TODO: Add role based access. Add ALL providers(some...). Add DB for credentials.

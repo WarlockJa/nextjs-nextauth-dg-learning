@@ -8,6 +8,12 @@ const nextConfig = {
         port: "",
         pathname: "/u/**",
       },
+      {
+        protocol: "https",
+        hostname: "scontent.*.fna.fbcdn.net",
+        port: "",
+        pathname: "/v/**",
+      },
     ],
   },
 };
