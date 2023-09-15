@@ -26,3 +26,34 @@ openssl rand -base64 32
 - configure NextImage for FB CDN in next.config.js
 
 TODO: Add role based access. Add ALL providers(some...). Add DB for credentials.
+    Database
+- creating Docket Postgresql DB
+docker run --rm -p 5432:5432 -e POSTGRES_HOST_AUTH_METHOD=trust postgres
+- installing Prisma for development only
+npm i -D prisma
+- installing prisma client
+npm i @prisma/client
+- initialize Prisma
+npm prisma init
+- changing .env DATABASE_URL to connect to our DB
+- creating prisma migration
+npx prisma migrate dev --name init
+(NOTE Prisma generates Type Definitions inside node_modules, meaning they need to be regenerated either post installation, or as a part of the build process)
+- adding prisma Type Definitions regeneration to the build script in package.json 
+    "scripts": {
+        "build": "prisma generate && next build",
+    },
+
+    Adding password encryption
+- install bcrypt and bcrypt types
+npm i bcrypt
+npm i -D @types/bcrypt
+
+    Seeding the DB
+- install ts-node, this allows to execute a node script written in TS
+npm i -D ts-node
+- creating prisma seed command (https://www.prisma.io/docs/guides/migrate/seed-database#how-to-seed-your-database-in-prisma) (NOTE NextJS requires additional compile options)
+- creating prisma seed file ./prisma/seed.ts
+- running the seed command
+npx prisma db seed
+- creating a singleton for Prisma connection, i.e. preventing hot reloading from creating new instances of Prisma Client (https://www.prisma.io/docs/guides/performance-and-optimization/connection-management). src/lib/prisma.ts. All further imports of Prisma will be from this file.

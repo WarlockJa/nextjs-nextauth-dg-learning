@@ -7,9 +7,12 @@ import GoogleProvider from "next-auth/providers/google";
 import GitHubProvider from "next-auth/providers/github";
 import RedditProvider from "next-auth/providers/reddit";
 import TwitchProvider from "next-auth/providers/twitch";
+import { prisma } from "@/lib/prisma";
+import { compare } from "bcrypt";
 
 export const options: NextAuthOptions = {
   // methods of authentication
+  // TODO check session strategy
   providers: [
     CredentialsProvider({
       // The name to display on the sign in form (e.g. "Sign in with...")
@@ -19,27 +22,44 @@ export const options: NextAuthOptions = {
       // e.g. domain, username, password, 2FA token, etc.
       // You can pass any HTML attribute to the <input> tag through the object.
       credentials: {
-        username: { label: "Username", type: "text", placeholder: "Name" },
+        // username: { label: "Username", type: "text", placeholder: "Name" },
+        email: {
+          label: "Email",
+          type: "email",
+          placeholder: "hello@example.com",
+        },
         password: { label: "Password", type: "password" },
       },
       async authorize(credentials, req) {
-        // Add logic here to look up the user from the credentials supplied
-        const user = {
-          id: "1",
-          name: "Smith",
-          email: "jsmith@example.com",
-          password: "asd",
+        // no email or password provided
+        // null tells NextAuth that credentials weren't correct
+        if (!credentials?.email || !credentials.password) return null;
+
+        // fetchign user data from the DB
+        const user = await prisma.user.findUnique({
+          where: {
+            email: credentials.email,
+          },
+        });
+
+        // no user with this email is found in the DB
+        if (!user) return null;
+
+        // checking if password is correct
+        const isPasswordValid = await compare(
+          credentials.password,
+          user.password
+        );
+
+        // password is incorrect
+        if (!isPasswordValid) return null;
+
+        // returning user data
+        return {
+          id: user.id.toString(),
+          email: user.email,
+          name: user.name,
         };
-
-        if (user) {
-          // Any object returned will be saved in `user` property of the JWT
-          return user;
-        } else {
-          // If you return null then an error will be displayed advising the user to check their details.
-          return null;
-
-          // You can also Reject this callback with an Error thus the user will be sent to the error page with the error message as a query parameter
-        }
       },
     }),
     // FacebookProvider({
