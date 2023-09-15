@@ -2,6 +2,7 @@ import { NextAuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 // import FacebookProvider from "next-auth/providers/facebook";
 import DiscordProvider from "next-auth/providers/discord";
+import LinkedinProvider from "next-auth/providers/linkedin";
 import GoogleProvider from "next-auth/providers/google";
 import GitHubProvider from "next-auth/providers/github";
 
@@ -50,6 +51,23 @@ export const options: NextAuthOptions = {
     DiscordProvider({
       clientId: process.env.DISCORD_CLIENT_ID!,
       clientSecret: process.env.DISCORD_CLIENT_SECRET!,
+    }),
+    LinkedinProvider({
+      clientId: process.env.LINKEDIN_CLIENT_ID!,
+      clientSecret: process.env.LINKEDIN_CLIENT_SECRET!,
+      authorization: {
+        params: { scope: "openid profile email" },
+      },
+      issuer: "https://www.linkedin.com",
+      jwks_endpoint: "https://www.linkedin.com/oauth/openid/jwks",
+      profile(profile, tokens) {
+        return {
+          id: profile.sub,
+          name: profile.name,
+          email: profile.email,
+          image: profile.picture ?? undefined,
+        };
+      },
     }),
     GitHubProvider({
       clientId: process.env.GITHUB_ID!,
