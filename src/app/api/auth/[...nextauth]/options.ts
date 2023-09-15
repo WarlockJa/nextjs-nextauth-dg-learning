@@ -48,7 +48,4 @@ export const options: NextAuthOptions = {
   ],
   // you can provide your own custom components here as describbed in (https://next-auth.js.org/configuration/options)
   // if not NextAuth will provide you with its own components
-  //   pages: {
-  //     signOut: "/auth/signout",
-  //   },
 };
