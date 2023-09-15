@@ -5,6 +5,8 @@ import DiscordProvider from "next-auth/providers/discord";
 import LinkedinProvider from "next-auth/providers/linkedin";
 import GoogleProvider from "next-auth/providers/google";
 import GitHubProvider from "next-auth/providers/github";
+import RedditProvider from "next-auth/providers/reddit";
+import TwitchProvider from "next-auth/providers/twitch";
 
 export const options: NextAuthOptions = {
   // methods of authentication
@@ -51,6 +53,28 @@ export const options: NextAuthOptions = {
     DiscordProvider({
       clientId: process.env.DISCORD_CLIENT_ID!,
       clientSecret: process.env.DISCORD_CLIENT_SECRET!,
+    }),
+    RedditProvider({
+      clientId: process.env.REDDIT_CLIENT_ID!,
+      clientSecret: process.env.REDDIT_CLIENT_SECRET!,
+      authorization: {
+        params: {
+          duration: "permanent",
+        },
+      },
+      // reddit image url is not working
+      profile(profile) {
+        console.log(profile);
+        return {
+          id: profile.id,
+          name: profile.name,
+          image: profile.icon_img,
+        };
+      },
+    }),
+    TwitchProvider({
+      clientId: process.env.TWITCH_CLIENT_ID!,
+      clientSecret: process.env.TWITCH_CLIENT_SECRET!,
     }),
     LinkedinProvider({
       clientId: process.env.LINKEDIN_CLIENT_ID!,

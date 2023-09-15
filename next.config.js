@@ -37,6 +37,20 @@ const nextConfig = {
         port: "",
         pathname: "/dms/image/**",
       },
+      {
+        // twitch
+        protocol: "https",
+        hostname: "static-cdn.jtvnw.net",
+        port: "",
+        pathname: "/jtv_user_pictures/**",
+      },
+      {
+        // reddit
+        protocol: "https",
+        hostname: "styles.redditmedia.com",
+        port: "",
+        pathname: "/t5_9bqeci/styles/**",
+      },
     ],
   },
 };
