@@ -84,7 +84,7 @@ export const options: NextAuthOptions = {
       },
       // reddit image url is not working
       profile(profile) {
-        console.log(profile);
+        // console.log(profile);
         return {
           id: profile.id,
           name: profile.name,
