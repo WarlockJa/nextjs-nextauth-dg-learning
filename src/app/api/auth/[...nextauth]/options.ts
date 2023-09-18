@@ -83,13 +83,13 @@ export const options: NextAuthOptions = {
         },
       },
       // reddit image url is not working
-      profile(profile) {
-        return {
-          id: profile.id,
-          name: profile.name,
-          image: profile.icon_img,
-        };
-      },
+      // profile(profile) {
+      //   return {
+      //     id: profile.id,
+      //     name: profile.name,
+      //     image: profile.icon_img,
+      //   };
+      // },
     }),
     TwitchProvider({
       clientId: process.env.TWITCH_CLIENT_ID!,
