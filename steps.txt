@@ -75,4 +75,4 @@ npx prisma db seed
 - creating tiered access based on the role name in pages. - src/app/server/page.tsx (NOTE this is an example, preferable way is to use middleware)
 - tiered access with middleware src/middleware.ts 
 
-TODO add user registration/deletion(modification?). Tie provider session with roles in DB.
+TODO Tie provider session with roles in DB. add user registration(email verification)/deletion/passchange(modification?).

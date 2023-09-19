@@ -25,7 +25,7 @@ export default async function ServerPage() {
       <div className="flex flex-col gap-2 items-center">
         <h1 className="text-3xl">Access Denied</h1>
         <p>your current access level is {JSON.stringify(session.user.role)}</p>
-        <p>you need "admin" rights in order to view this page</p>
+        <p>you need administrator priviliges in order to view this page</p>
         <Link
           className="text-3xl"
           href={"/api/auth/signin?callbackUrl=/server"}
