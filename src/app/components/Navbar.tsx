@@ -1,5 +1,5 @@
 import Link from "next/link";
-// import NavbarSignOutButton from "./NavbarSignOutButton";
+import NavbarSignOutButton from "./NavbarSignOutButton";
 import { getServerSession } from "next-auth";
 import { options } from "../api/auth/[...nextauth]/options";
 
@@ -13,8 +13,8 @@ export default async function Navbar() {
         </li>
         {session?.user ? (
           <li>
-            <Link href="/api/auth/signout">Sign Out</Link>
-            {/* <NavbarSignOutButton /> */}
+            {/* <Link href="/api/auth/signout">Sign Out</Link> */}
+            <NavbarSignOutButton />
           </li>
         ) : (
           <li>
