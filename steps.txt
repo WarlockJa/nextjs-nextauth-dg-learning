@@ -25,7 +25,6 @@ openssl rand -base64 32
 - configure Products -> Facebook Login -> Configure -> Settings -> Deauthorize URL (https://localhost:3000/api/auth/callback/facebook)
 - configure NextImage for FB CDN in next.config.js
 
-TODO: Add role based access. Add ALL providers(some...). Add DB for credentials.
     Database
 - creating Docket Postgresql DB
 docker run --rm -p 5432:5432 -e POSTGRES_HOST_AUTH_METHOD=trust postgres
@@ -61,8 +60,19 @@ npx prisma db seed
     Adding custom keys to the NextAuth options (session, jwt) (https://next-auth.js.org/configuration/options)
 - adding session and jwt options src/app/api/auth/[...nextauth]/options.ts (demonstrating custom properties in the jwt)(NOTE custom properties in jwt passed inside of the cookie therefore must not exceed certain size)
 
+    Module augmentation (https://next-auth.js.org/getting-started/typescript#module-augmentation)
+- creating ./next-auth.d.ts file with extended types for next-auth
+
     Protected routes (can be applied on client, server, or as middleware. Middleware is preferred)
 - client protected routes src/app/client/page.tsx (NOTE Client pages will have a delay fetching auth data. Need to address loading. Generally not a good idea to protect routes on the client)
 - server protected routes src/app/server/page.tsx
 - middleware src/middleware.ts - defining protected routes with a matcher. If no session data found automatically redirects to the signin route with callbackUrl of the protected page
 - protected API route src/app/api/test/route.ts - return 401 on get request if no session data
+
+    Role-based access
+- adding profile - src/app/api/auth/[...nextauth]/options.ts
+- modifying middleware src/middleware.ts (https://next-auth.js.org/configuration/nextjs#advanced-usage)
+- creating tiered access based on the role name in pages. - src/app/server/page.tsx (NOTE this is an example, preferable way is to use middleware)
+- tiered access with middleware src/middleware.ts 
+
+TODO add user registration/deletion(modification?). Tie provider session with roles in DB.

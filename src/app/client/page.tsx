@@ -29,12 +29,12 @@ export default function ClientPage() {
       </div>
     );
 
-  // loading auth data session is undefined during loading
+  // loading. auth data session is undefined during loading
   if (session === undefined) return <h1 className="text-3xl">Loading...</h1>;
 
   return (
     <section className="flex flex-col gap-6">
-      <UserCard user={session?.user} pagetype={"Client"} />
+      <UserCard user={session.user} pagetype={"Client"} />
     </section>
   );
 }

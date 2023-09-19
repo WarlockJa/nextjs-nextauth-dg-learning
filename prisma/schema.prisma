@@ -11,10 +11,11 @@ datasource db {
 }
 
 model User {
-  id       Int     @id @default(autoincrement())
+  id       String   @id @default(uuid())
   name     String?
-  email    String  @unique
+  email    String   @unique
   password String
+  role     String[]
   // customKey property used in NextAuth options as an example
   // customKey String
 }

@@ -3,13 +3,15 @@ import CredentialsProvider from "next-auth/providers/credentials";
 // import FacebookProvider from "next-auth/providers/facebook";
 import DiscordProvider from "next-auth/providers/discord";
 import LinkedinProvider from "next-auth/providers/linkedin";
+import { LinkedInProfile } from "next-auth/providers/linkedin";
 import GoogleProvider from "next-auth/providers/google";
-import GitHubProvider from "next-auth/providers/github";
+import { GoogleProfile } from "next-auth/providers/google";
 import RedditProvider from "next-auth/providers/reddit";
 import TwitchProvider from "next-auth/providers/twitch";
+import GitHubProvider from "next-auth/providers/github";
+import { GithubProfile } from "next-auth/providers/github";
 import { prisma } from "@/lib/prisma";
 import { compare } from "bcrypt";
-import { User } from "@prisma/client";
 
 export const options: NextAuthOptions = {
   // methods of authentication
@@ -60,6 +62,7 @@ export const options: NextAuthOptions = {
           id: user.id.toString(),
           email: user.email,
           name: user.name,
+          role: user.role,
           // custom key to demonstrate its use in the NextAuth session
           customKey: "Some custom key",
         };
@@ -70,6 +73,16 @@ export const options: NextAuthOptions = {
     //   clientSecret: process.env.FACEBOOK_CLIENT_SECRET!,
     // }),
     GoogleProvider({
+      // importing profile from Google
+      profile(profile: GoogleProfile) {
+        // console.log(profile);
+        return {
+          ...profile,
+          role: ["user"],
+          id: profile.sub,
+          image: profile.picture,
+        };
+      },
       clientId: process.env.GOOGLE_CLIENT_ID!,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
     }),
@@ -106,16 +119,29 @@ export const options: NextAuthOptions = {
       },
       issuer: "https://www.linkedin.com",
       jwks_endpoint: "https://www.linkedin.com/oauth/openid/jwks",
-      profile(profile, tokens) {
+      // provided by next-auth LinkedInProfile may be outdated
+      profile(profile: LinkedInProfile, tokens) {
+        // console.log(profile);
         return {
           id: profile.sub,
           name: profile.name,
           email: profile.email,
           image: profile.picture ?? undefined,
+          role: ["user"],
         };
       },
     }),
     GitHubProvider({
+      // importing profile from GitHub
+      profile(profile: GithubProfile) {
+        // console.log(profile);
+        return {
+          ...profile,
+          role: ["user"],
+          id: profile.id.toString(),
+          image: profile.avatar_url,
+        };
+      },
       clientId: process.env.GITHUB_ID!,
       clientSecret: process.env.GITHUB_SECRET!,
     }),
@@ -123,6 +149,26 @@ export const options: NextAuthOptions = {
   // you can provide your own custom components here as describbed in (https://next-auth.js.org/configuration/options)
   // if not NextAuth will provide you with its own components
   callbacks: {
+    jwt: ({ user, token }) => {
+      // the user parameters only shows up once when authenticating
+      if (user) {
+        // console.log("JWT Callback", { token, user });
+
+        // the default return type does not contain custom properties, so we need to define a custom type
+        // we're using extended Prisma User type with custom properties added
+        // const typedUser = user as unknown as User;
+        return {
+          ...token,
+          // id: typedUser.id,
+          // role: typedUser.role,
+          id: user.id,
+          role: user.role,
+          // customKey: typedUser.customKey,
+        };
+      }
+      // this token is used in the session, so the session now can access custom properties
+      return token;
+    },
     session: ({ session, token }) => {
       // console.log("Session Callback", { session, token });
 
@@ -133,27 +179,10 @@ export const options: NextAuthOptions = {
         user: {
           ...session.user,
           id: token.id,
-          customKey: token.customKey,
+          role: token.role,
+          // customKey: token.customKey,
         },
       };
-    },
-    jwt: ({ user, token }) => {
-      // the user parameters only shows up once when authenticating
-      if (user) {
-        // console.log("JWT Callback", { token, user });
-
-        // the default return type does not contain custom properties, so we need to define a custom type
-        // type is taken from prisma, but for demonstation purposes we will not change prisma schema
-        // const typedUser = user as unknown as User
-        const typedUser = user as unknown as any;
-        return {
-          ...token,
-          id: typedUser.id,
-          customKey: typedUser.customKey,
-        };
-      }
-      // this token is used in the session, so the session now can access custom properties
-      return token;
     },
   },
 };

@@ -1,12 +1,5 @@
+import { User } from "next-auth";
 import Image from "next/image";
-
-type User =
-  | {
-      name?: string | null | undefined;
-      email?: string | null | undefined;
-      image?: string | null | undefined;
-    }
-  | undefined;
 
 type Props = {
   user: User;
@@ -37,11 +30,24 @@ export default function UserCard({ user, pagetype }: Props) {
     />
   ) : null;
 
+  const userRole = user?.role?.length ? (
+    <div className="flex justify-center gap-2">
+      <h2 className="text-2xl">Your roles are: [</h2>
+      {user.role.map((role) => (
+        <p key={role} className="text-2xl">
+          {role}
+        </p>
+      ))}
+      <h2 className="text-2xl">]</h2>
+    </div>
+  ) : null;
+
   return (
     <section className="flex flex-col gap-4">
       {greeting}
       {emailDisplay}
       {userImage}
+      {userRole}
       <p className="text-2xl text-center">{pagetype} Page!</p>
       <pre>{JSON.stringify(user, null, 2)}</pre>
     </section>
