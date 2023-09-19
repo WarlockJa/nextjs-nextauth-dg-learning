@@ -43,6 +43,7 @@ export default function UserCard({ user, pagetype }: Props) {
       {emailDisplay}
       {userImage}
       <p className="text-2xl text-center">{pagetype} Page!</p>
+      <pre>{JSON.stringify(user, null, 2)}</pre>
     </section>
   );
 }

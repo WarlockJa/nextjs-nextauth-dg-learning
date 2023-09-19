@@ -57,3 +57,12 @@ npm i -D ts-node
 - running the seed command
 npx prisma db seed
 - creating a singleton for Prisma connection, i.e. preventing hot reloading from creating new instances of Prisma Client (https://www.prisma.io/docs/guides/performance-and-optimization/connection-management). src/lib/prisma.ts. All further imports of Prisma will be from this file.
+
+    Adding custom keys to the NextAuth options (session, jwt) (https://next-auth.js.org/configuration/options)
+- adding session and jwt options src/app/api/auth/[...nextauth]/options.ts (demonstrating custom properties in the jwt)(NOTE custom properties in jwt passed inside of the cookie therefore must not exceed certain size)
+
+    Protected routes (can be applied on client, server, or as middleware. Middleware is preferred)
+- client protected routes src/app/client/page.tsx (NOTE Client pages will have a delay fetching auth data. Need to address loading. Generally not a good idea to protect routes on the client)
+- server protected routes src/app/server/page.tsx
+- middleware src/middleware.ts - defining protected routes with a matcher. If no session data found automatically redirects to the signin route with callbackUrl of the protected page
+- protected API route src/app/api/test/route.ts - return 401 on get request if no session data

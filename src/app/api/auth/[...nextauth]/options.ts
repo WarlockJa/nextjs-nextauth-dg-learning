@@ -9,6 +9,7 @@ import RedditProvider from "next-auth/providers/reddit";
 import TwitchProvider from "next-auth/providers/twitch";
 import { prisma } from "@/lib/prisma";
 import { compare } from "bcrypt";
+import { User } from "@prisma/client";
 
 export const options: NextAuthOptions = {
   // methods of authentication
@@ -59,6 +60,8 @@ export const options: NextAuthOptions = {
           id: user.id.toString(),
           email: user.email,
           name: user.name,
+          // custom key to demonstrate its use in the NextAuth session
+          customKey: "Some custom key",
         };
       },
     }),
@@ -119,4 +122,38 @@ export const options: NextAuthOptions = {
   ],
   // you can provide your own custom components here as describbed in (https://next-auth.js.org/configuration/options)
   // if not NextAuth will provide you with its own components
+  callbacks: {
+    session: ({ session, token }) => {
+      // console.log("Session Callback", { session, token });
+
+      // accessing custom properties from the jwt token we defined below in the jwt callback
+      // and adding them into the session so they are always available
+      return {
+        ...session,
+        user: {
+          ...session.user,
+          id: token.id,
+          customKey: token.customKey,
+        },
+      };
+    },
+    jwt: ({ user, token }) => {
+      // the user parameters only shows up once when authenticating
+      if (user) {
+        // console.log("JWT Callback", { token, user });
+
+        // the default return type does not contain custom properties, so we need to define a custom type
+        // type is taken from prisma, but for demonstation purposes we will not change prisma schema
+        // const typedUser = user as unknown as User
+        const typedUser = user as unknown as any;
+        return {
+          ...token,
+          id: typedUser.id,
+          customKey: typedUser.customKey,
+        };
+      }
+      // this token is used in the session, so the session now can access custom properties
+      return token;
+    },
+  },
 };

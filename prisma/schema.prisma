@@ -15,4 +15,6 @@ model User {
   name     String?
   email    String  @unique
   password String
+  // customKey property used in NextAuth options as an example
+  // customKey String
 }
