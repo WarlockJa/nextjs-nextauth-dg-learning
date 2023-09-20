@@ -2,6 +2,7 @@ import Link from "next/link";
 import NavbarSignOutButton from "./NavbarSignOutButton";
 import { getServerSession } from "next-auth";
 import { options } from "../api/auth/[...nextauth]/options";
+import NavbarUserButton from "./NavbarUserButton";
 
 export default async function Navbar() {
   const session = await getServerSession(options);
@@ -30,6 +31,9 @@ export default async function Navbar() {
         <li>
           <Link href="/extra">Extra</Link>
         </li>
+        {/* <li>
+          <NavbarUserButton user={session?.user} />
+        </li> */}
       </ul>
     </nav>
   );

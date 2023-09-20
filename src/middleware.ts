@@ -10,18 +10,16 @@ export default withAuth(
   function middleware(req: NextRequestWithAuth) {
     // console.log(req.nextUrl.pathname);
     // console.log(req.nextauth.token);
-
     if (
       req.nextUrl.pathname.startsWith("/extra") &&
-      !req.nextauth.token?.role.includes("admin")
+      !req.nextauth.token?.roles.includes("admin")
     ) {
       return NextResponse.rewrite(new URL("/denied", req.url));
     }
-
     if (
       req.nextUrl.pathname.startsWith("/client") &&
-      !req.nextauth.token?.role.includes("admin") &&
-      !req.nextauth.token?.role.includes("manager")
+      !req.nextauth.token?.roles.includes("admin") &&
+      !req.nextauth.token?.roles.includes("manager")
     ) {
       return NextResponse.rewrite(new URL("/denied", req.url));
     }
@@ -32,7 +30,7 @@ export default withAuth(
       authorized: ({ token }) => !!token, // checking if user is authorized with any role
 
       // example of middleware callback based on the role
-      // authorized: ({ token }) => !!token?.role?.includes("admin"),
+      // authorized: ({ token }) => !!token?.roles?.includes("admin"),
     },
   }
 );
@@ -40,5 +38,5 @@ export default withAuth(
 // Applies next-auth only to matching routes - can be regex
 // Ref: https://nextjs.org/docs/app/building-your-application/routing/middleware#matcher
 export const config = {
-  matcher: ["/extra", "/client", "/protectedroot/:path*"],
+  matcher: ["/extra", "/protectedroot/:path*"],
 };

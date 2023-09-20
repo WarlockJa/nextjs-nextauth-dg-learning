@@ -76,3 +76,9 @@ npx prisma db seed
 - tiered access with middleware src/middleware.ts 
 
 TODO Tie provider session with roles in DB. add user registration(email verification)/deletion/passchange(modification?).
+    Implementing Prisma Adapter
+- installing prisma Adapter (https://authjs.dev/reference/adapter/prisma)
+npm i @auth/prisma-adapter
+- creating, migrating/pushing prisma schema
+- Credentials provider will not work with Adapter (https://github.com/nextauthjs/next-auth/discussions/2248). We need to implement separate schema model to accomodate email/password authentication -> creating CredentialsUser model
+- changing strategy to "jwt". (when using adapter stategy is switched to "database" which will prevent Credentials provider from forming a session. Manually setting strategy to "jwt" src/app/api/auth/[...nextauth]/options.ts)

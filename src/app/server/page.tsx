@@ -20,20 +20,20 @@ export default async function ServerPage() {
       </div>
     );
 
-  if (!session.user?.role?.includes("admin"))
-    return (
-      <div className="flex flex-col gap-2 items-center">
-        <h1 className="text-3xl">Access Denied</h1>
-        <p>your current access level is {JSON.stringify(session.user.role)}</p>
-        <p>you need administrator priviliges in order to view this page</p>
-        <Link
-          className="text-3xl"
-          href={"/api/auth/signin?callbackUrl=/server"}
-        >
-          Sign In
-        </Link>
-      </div>
-    );
+  // if (!session.user?.roles?.includes("admin"))
+  //   return (
+  //     <div className="flex flex-col gap-2 items-center">
+  //       <h1 className="text-3xl">Access Denied</h1>
+  //       <p>your current access level is {JSON.stringify(session.user.roles)}</p>
+  //       <p>you need administrator priviliges in order to view this page</p>
+  //       <Link
+  //         className="text-3xl"
+  //         href={"/api/auth/signin?callbackUrl=/server"}
+  //       >
+  //         Sign In
+  //       </Link>
+  //     </div>
+  //   );
 
   return (
     <section className="flex flex-col gap-6">

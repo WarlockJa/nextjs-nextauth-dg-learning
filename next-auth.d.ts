@@ -5,23 +5,25 @@ declare module "next-auth" {
   interface Session {
     user: {
       id: string;
-      role: string[];
+      roles: string[];
     } & DefaultSession;
   }
 
   interface User extends DefaultUser {
-    role: string[];
+    roles: string[];
+  }
+
+  interface AdapterUser extends User {
+    id: string;
+    email: string;
+    emailVerified: Date | null;
+    roles: string[];
   }
 }
 
 declare module "next-auth/jwt" {
   interface JWT extends DefaultJWT {
     id: string;
-    role: string[];
+    roles: string[];
   }
 }
-
-// // extending Prisma User type to add custom properties to be used in session
-// interface ICustomPropertiesUser extends User {
-//   customKey: String;
-// }
