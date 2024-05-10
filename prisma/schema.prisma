@@ -16,22 +16,12 @@ model User {
   id            String    @id @default(cuid())
   name          String?
   email         String?   @unique
-  emailVerified DateTime?
+  emailVerified Boolean?
   image         String?
   accounts      Account[]
-  sessions      Session[]
+  // sessions      Session[]
   roles         String[]  @default(["user"])
-}
-
-// Credentials User table
-model CredentialsUser {
-  id            String    @id @default(cuid())
-  name          String?
-  email         String?   @unique
-  emailVerified DateTime?
-  image         String?
-  roles         String[]  @default(["user"])
-  password      String
+  password      String?
 }
 
 // DO NOT CHANGE BELOW
@@ -54,13 +44,14 @@ model Account {
   @@unique([provider, providerAccountId])
 }
 
-model Session {
-  id           String   @id @default(cuid())
-  sessionToken String   @unique
-  userId       String
-  expires      DateTime
-  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-}
+// session is not used with JWT strategy
+// model Session {
+//   id           String   @id @default(cuid())
+//   sessionToken String   @unique
+//   userId       String
+//   expires      DateTime
+//   user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+// }
 
 model VerificationToken {
   identifier String

@@ -16,15 +16,9 @@ import { prisma } from "@/lib/prisma";
 import { compare } from "bcrypt";
 import { PrismaAdapter } from "@auth/prisma-adapter";
 
-// NOTE Providers email verification data
-// Google   email_verified: boolean
-// LinkedIn email_verified: boolean
-// GitHub   email comes verified
-// Twitch   email comes verified
-
 export const options: NextAuthOptions = {
   // TODO fix adapter types
-  // @ts-expect-error
+  // TODO enable RLS for Supabase https://authjs.dev/reference/adapter/supabase
   adapter: PrismaAdapter(prisma),
   // methods of authentication
   providers: [
@@ -50,7 +44,7 @@ export const options: NextAuthOptions = {
         if (!credentials?.email || !credentials?.password) return null;
 
         // fetchign user data from the DB
-        const user = await prisma.credentialsUser.findUnique({
+        const user = await prisma.user.findUnique({
           where: {
             email: credentials.email,
           },
@@ -58,6 +52,9 @@ export const options: NextAuthOptions = {
 
         // no user with this email is found in the DB
         if (!user) return null;
+
+        // Credentials provider user must have password in the DB
+        if (!user.password) return null;
 
         // checking if password is correct
         const isPasswordValid = await compare(
@@ -71,8 +68,10 @@ export const options: NextAuthOptions = {
         // returning user data
         return {
           id: user.id.toString(),
-          email: user.email,
           name: user.name,
+          email: user.email,
+          emailVerified: user.emailVerified,
+          image: user.image,
           roles: user.roles,
           // custom key to demonstrate its use in the NextAuth session
           // customKey: "Some custom key",

@@ -5,7 +5,7 @@ async function main() {
   // hashed password for the seeded user
   const password = await hash("test", 12);
   // using upsert so user is only created if does not exist
-  const user = await prisma.credentialsUser.upsert({
+  const user = await prisma.user.upsert({
     where: { email: "test@test.com" },
     // no update action necessary
     update: {},

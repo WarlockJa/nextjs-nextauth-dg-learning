@@ -82,3 +82,7 @@ npm i @auth/prisma-adapter
 - creating, migrating/pushing prisma schema
 - Credentials provider will not work with Adapter (https://github.com/nextauthjs/next-auth/discussions/2248). We need to implement separate schema model to accomodate email/password authentication -> creating CredentialsUser model
 - changing strategy to "jwt". (when using adapter stategy is switched to "database" which will prevent Credentials provider from forming a session. Manually setting strategy to "jwt" src/app/api/auth/[...nextauth]/options.ts)
+    
+    Implementing Supabase RLS(Row Level Security)(https://authjs.dev/reference/adapter/supabase)
+- RLS is a two step process we need to be able to sign JWT in a session callback. Installing package jsonwebtoken
+npm install jsonwebtoken
